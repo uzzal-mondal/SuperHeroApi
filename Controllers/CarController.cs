@@ -6,6 +6,15 @@ namespace SuperHeroApi.Controllers
     [ApiController]
     public class CarController : Controller
     {
+        private readonly DataContext _dataContext;
+
+        public CarController(DataContext dataContext)
+        {
+            _dataContext = dataContext;
+        }
+
+      
+
          
        
     }
