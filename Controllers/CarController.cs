@@ -4,7 +4,7 @@ namespace SuperHeroApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CarController : Controller
+    public class CarController :  Controller
     {
         private readonly DataContext _dataContext;
 
