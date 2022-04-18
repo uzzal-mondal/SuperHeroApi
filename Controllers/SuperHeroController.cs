@@ -6,18 +6,15 @@ namespace SuperHeroApi.Controllers
     [ApiController]
     public class SuperHeroController : ControllerBase
     {
-       
-
+        
         private readonly DataContext _dataContext;
 
         public SuperHeroController(DataContext dataContext)
         {
             _dataContext = dataContext;
-            
         }
       
          
-
         [HttpGet]
         public async Task<ActionResult<List<SuperHero>>> Get()
         {
