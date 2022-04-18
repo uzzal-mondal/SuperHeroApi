@@ -60,8 +60,8 @@ namespace SuperHeroApi.Controllers
             else
             {
                 return BadRequest("No data found.");
-
             }
+
             return Ok(carList);
         }
 
@@ -82,9 +82,6 @@ namespace SuperHeroApi.Controllers
             return Ok(carList);
 
         }
-
-
-         
        
     }
 }
