@@ -16,7 +16,7 @@ namespace SuperHeroApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Book>>> Get()
         {
-            var bookList = _dataContext.Books.ToList();
+            var bookList = await _dataContext.Books.ToListAsync();
             return Ok(bookList);
         }
 

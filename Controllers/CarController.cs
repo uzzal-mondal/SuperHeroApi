@@ -13,6 +13,7 @@ namespace SuperHeroApi.Controllers
             _dataContext = dataContext;
         }
 
+
         [HttpGet]
         public async Task<ActionResult<List<CarModel>>> Get()
         {
@@ -44,6 +45,7 @@ namespace SuperHeroApi.Controllers
             return Ok(carList);
         }
       
+
         [HttpPut]
         public async Task<ActionResult<List<CarModel>>> Put(CarModel carRequest)
         {
@@ -64,6 +66,7 @@ namespace SuperHeroApi.Controllers
 
             return Ok(carList);
         }
+
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
