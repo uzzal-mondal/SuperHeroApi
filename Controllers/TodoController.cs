@@ -68,7 +68,7 @@ namespace SuperHeroApi.Controllers
                 todoModel.Title = upItem.Title;
                 todoModel.Description = upItem.Description;
                 await _dataContext.SaveChangesAsync();
-                return NotFound();
+                return Ok(todoModel);
                 
             }
             else
@@ -90,7 +90,9 @@ namespace SuperHeroApi.Controllers
             }
             else
             {
-                
+                _dataContext.Remove(delItem);
+                await _dataContext.SaveChangesAsync();
+                return Ok(delItem);
             }
         }
             
