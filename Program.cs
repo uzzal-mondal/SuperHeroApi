@@ -2,6 +2,7 @@
 global using SuperHeroApi.Data;
 global using Microsoft.EntityFrameworkCore;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -11,10 +12,17 @@ builder.Services.AddControllers()
     options.SerializerSettings.ReferenceLoopHandling 
     = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-builder.Services.AddDbContext<DataContext>(optionsAction =>
-{
-    optionsAction.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+
+
+//builder.Services.AddDbContext<DataContext>(optionsAction =>
+//{
+//    optionsAction.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+//});
+
+ builder.Configuration.GetConnectionString("DefaultConnection");
+
+
+
 
 
 

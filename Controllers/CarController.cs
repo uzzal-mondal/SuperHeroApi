@@ -4,87 +4,113 @@ namespace SuperHeroApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CarController :  Controller
+    public class CarController : Controller
     {
-        private readonly DataContext _dataContext;
 
-        public CarController(DataContext dataContext)
+        private readonly IConfiguration _configuration;
+
+        public CarController(IConfiguration configuration)
         {
-            _dataContext = dataContext;
+            _configuration = configuration;
         }
 
 
         [HttpGet]
         public async Task<ActionResult<List<CarModel>>> Get()
         {
-            var carList = _dataContext.CarModels.ToList();
-            return Ok(carList);
-        }
-
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<CarModel>> Get(int id)
-        {
-           var carList =  _dataContext.CarModels.Where(carId=>carId.Id == id).FirstOrDefault();
-            if (carList == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(carList);
-            }
-
+            CarDBHandler dBHandler = new CarDBHandler(_configuration);
+            ModelState.Clear();
+            return Ok(dBHandler.GetCarList());
         }
 
         [HttpPost]
         public async Task<ActionResult<List<CarModel>>> Post(CarModel model)
         {
-            var carList = _dataContext.CarModels.Add(model);
-            _dataContext.SaveChanges();
-            return Ok(carList);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    CarDBHandler dBHandler = new CarDBHandler(_configuration);
+                    if (dBHandler.AddCar(model))
+                    {
+                        ModelState.Clear();
+                    }
+                }
+                return Ok("Car Added successfully.");
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
-      
+
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<List<CarModel>>> Get(int id)
+        {
+            CarDBHandler dbHandler = new CarDBHandler(_configuration);
+
+            if (dbHandler != null)
+            {
+                return Ok(dbHandler.GetCarList().Find(carId => carId.Id == id));
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
 
         [HttpPut]
-        public async Task<ActionResult<List<CarModel>>> Put(CarModel carRequest)
+        public async Task<ActionResult<List<CarModel>>> Put(int id, CarModel model)
         {
-            var carList = _dataContext.CarModels.ToList();
-            var carUp =  carList.Find(carId => carId == carRequest);
-            if (carUp != null)
+          
+            CarDBHandler dbHandler = new CarDBHandler(_configuration);
+            var updateData = dbHandler.GetCarList().Find(cId => cId.Id == id);
+            var upList = dbHandler.GetCarList().Find(cId => cId.Id == model.Id);
+
+            if (upList != null)
             {
-                carUp.Id = carRequest.Id;
-                carUp.CarName = carRequest.CarName;
-                carUp.CountryName = carRequest.CountryName;
-                carUp.CarPrice = carRequest.CarPrice;
-                return Ok(carList + " update successfully.");
+                bool b = dbHandler.UpdateDetails(model);
+
+                if (b == true)
+                {
+                    return Ok(updateData + " updated successfully.");
+                }
+                else
+                {
+                    return NotFound("Not found..");
+                }
             }
             else
             {
-                return BadRequest("No data found.");
+                if (updateData != null)
+                {
+                    return Ok(dbHandler.AddCar(model));
+                    return Ok(updateData);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
 
-            return Ok(carList);
+            return Ok(upList);
         }
 
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        [HttpDelete]
+        public async Task<ActionResult<List<CarModel>>> Delete(int id)
         {
-           var carList = _dataContext.CarModels.ToList();
-           var carDel =  _dataContext.CarModels.Where(carId=> carId.Id == id).FirstOrDefault();
-            if (carDel != null)
+            CarDBHandler dBHandler = new CarDBHandler(_configuration);
+            if(dBHandler.DeleteStudent(id))
             {
-                carList.Remove(carDel);
-                _dataContext.SaveChanges();
-            }
+                return Ok("Car id is successfully deleted.");
+            } 
             else
             {
-                return BadRequest("Data is not found.");
+                return NotFound();
             }
-            return Ok(carList);
-
         }
-       
     }
 }
