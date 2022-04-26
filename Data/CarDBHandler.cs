@@ -72,7 +72,6 @@ namespace SuperHeroApi.Data
         }
 
 
-
         public bool UpdateDetails(CarModel carModel)
         {
             connection();
@@ -93,9 +92,6 @@ namespace SuperHeroApi.Data
             else
                 return false;
         }
-
-
-
 
         public bool DeleteStudent(int id)
         {

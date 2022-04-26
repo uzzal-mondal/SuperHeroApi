@@ -1,43 +1,43 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SuperHeroApi.model;
 
 namespace SuperHeroApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CarController : Controller
+    public class EmployeeControler : Controller
     {
-
         private readonly IConfiguration _configuration;
 
-        public CarController(IConfiguration configuration)
+        public EmployeeControler(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-
         [HttpGet]
-        public async Task<ActionResult<List<CarModel>>> Get()
+        public async Task<ActionResult<List<Employee>>> Get()
         {
-            CarDBHandler dBHandler = new CarDBHandler(_configuration);
+            EmpDbHandler dBHandler = new EmpDbHandler(_configuration);
             ModelState.Clear();
-            return Ok(dBHandler.GetCarList());
+            return Ok(dBHandler.GetEmployeeList());
         }
 
 
+
         [HttpPost]
-        public async Task<ActionResult<List<CarModel>>> Post(CarModel model)
+        public async Task<ActionResult<List<Employee>>> Post(Employee model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    CarDBHandler dBHandler = new CarDBHandler(_configuration);
-                    if (dBHandler.AddCar(model))
+                    EmpDbHandler dBHandler = new EmpDbHandler(_configuration);
+                    if (dBHandler.AddEmp(model))
                     {
                         ModelState.Clear();
                     }
                 }
-                return Ok("Car Added successfully.");
+                return Ok("Emp Added successfully.");
             }
             catch
             {
@@ -47,28 +47,28 @@ namespace SuperHeroApi.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<CarModel>>> Get(int id)
+        public async Task<ActionResult<List<Employee>>> Get(int id)
         {
-            CarDBHandler dbHandler = new CarDBHandler(_configuration);
+            EmpDbHandler dbHandler = new EmpDbHandler(_configuration);
 
             if (dbHandler != null)
             {
-                return Ok(dbHandler.GetCarList().Find(carId => carId.Id == id));
+                return Ok(dbHandler.GetEmployeeList().Find(carId => carId.Id == id));
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 
 
         [HttpPut]
-        public async Task<ActionResult<List<CarModel>>> Put(int id, CarModel model)
+        public async Task<ActionResult<List<Employee>>> Put(int id, Employee model)
         {
-          
-            CarDBHandler dbHandler = new CarDBHandler(_configuration);
-            var updateData = dbHandler.GetCarList().Find(cId => cId.Id == id);
-            var upList = dbHandler.GetCarList().Find(cId => cId.Id == model.Id);
+
+            EmpDbHandler dbHandler = new EmpDbHandler(_configuration);
+            var updateData = dbHandler.GetEmployeeList().Find(cId => cId.Id == id);
+            var upList = dbHandler.GetEmployeeList().Find(cId => cId.Id == model.Id);
 
             if (upList != null)
             {
@@ -87,7 +87,7 @@ namespace SuperHeroApi.Controllers
             {
                 if (updateData != null)
                 {
-                    return Ok(dbHandler.AddCar(model));
+                    return Ok(dbHandler.AddEmp(model));
                     return Ok(updateData);
                 }
                 else
@@ -101,17 +101,21 @@ namespace SuperHeroApi.Controllers
 
 
         [HttpDelete]
-        public async Task<ActionResult<List<CarModel>>> Delete(int id)
+        public async Task<ActionResult<List<Employee>>> Delete(int id)
         {
-            CarDBHandler dBHandler = new CarDBHandler(_configuration);
-            if(dBHandler.DeleteStudent(id))
+            EmpDbHandler dBHandler = new EmpDbHandler(_configuration);
+            if (dBHandler.DeleteEmployee(id))
             {
-                return Ok("Car id is successfully deleted.");
-            } 
+                return Ok("Emp id is successfully deleted.");
+            }
             else
             {
                 return NotFound();
             }
         }
+
+
+
+
     }
 }
